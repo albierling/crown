@@ -19,9 +19,9 @@ st.set_page_config(layout="wide")
 # Load the datasets using the new caching method
 @st.cache_data
 def load_data():
-    crown_data = pd.read_excel('./data_crown/data.xlsx')
-    odors_data = pd.read_excel('./data_crown/odors.xlsx')
-    odors_extended_data = pd.read_excel('./data_crown/odors_extended.xlsx')  # Load extended file
+    crown_data = pd.read_excel('./data.xlsx')
+    odors_data = pd.read_excel('./odors.xlsx')
+    odors_extended_data = pd.read_excel('./odors_extended.xlsx')  # Load extended file
     # Merge the datasets on 'molcode', keeping all rows from odors_data
     odors_data = pd.merge(odors_data, odors_extended_data, on='molcode', how='left')
     return crown_data, odors_data
