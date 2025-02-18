@@ -4,8 +4,8 @@ import matplotlib.pyplot as plt
 
 import seaborn as sns
 from wordcloud import WordCloud
-from rdkit.Chem import Draw
 from rdkit import Chem
+from rdkit.Chem import Draw
 import numpy as np
 from PIL import Image
 from rdkit.Chem import Descriptors
