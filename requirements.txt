@@ -9,8 +9,7 @@ pillow
 wordcloud
 zenodo_get
 wordcloud
-rdkit
-rdkit.Chem
+deepchem
 numpy
 PIL
 collections
