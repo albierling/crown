@@ -23,7 +23,7 @@ CROWN_FILE = "data.xlsx"
 ODORS_FILE = "odors.xlsx"
 ODORS_EXTENDED_FILE = "odors_extended.xlsx"
 ZENODO_ID = "14727277"
-GITHUB_RAW_URL = "https://raw.githubusercontent.com/albierling/crown/main/"  # Adjust if needed
+GITHUB_RAW_URL = "https://raw.githubusercontent.com/albierling/crown/main/" 
 
 # Load the datasets using the new caching method
 @st.cache_data
