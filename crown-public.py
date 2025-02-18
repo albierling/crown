@@ -47,7 +47,7 @@ def load_data():
      # Download from Zenodo if necessary
     if not os.path.isfile(ODORS_FILE) or not os.path.isfile(CROWN_FILE):
         st.write("Downloading datasets from Zenodo...")
-        subprocess.run(f"zenodo_get -g *.xlsx {ZENODO_ID}", shell=True, text=True, check=True)
+        subprocess.run(f"zenodo_get {ZENODO_ID}", shell=True, text=True, check=True)
 
 
     # Load datasets
