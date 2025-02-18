@@ -1,0 +1,9 @@
+streamlit
+pandas
+openpyxl
+matplotlib
+plotly
+pydeck
+pillow
+wordcloud
+zenodo_get
