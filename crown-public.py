@@ -26,7 +26,7 @@ odors_extended_data = pd.read_excel("odors_extended.xlsx")
 @st.cache_data
 def load_data():
     # get df from Zenodo if neccesary
-    if not os.path.isfile(ODORS_FILE) or not os.path.isfile(ODORS_EXTENDED_FILE):
+    if not os.path.isfile(ODORS_FILE) or not os.path.isfile(CROWN_FILE):
         st.write("Downloading datasets from Zenodo...")
         subprocess.run("zenodo_get -g *.xlsx 14727277", shell=True, text=True, check=True)
     
