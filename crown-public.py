@@ -21,7 +21,6 @@ st.set_page_config(layout="wide")
 CROWN_FILE = "data.xlsx"
 ODORS_FILE = "odors.xlsx"
 
-
 # Load the datasets using the new caching method
 @st.cache_data
 def load_data():
@@ -31,14 +30,14 @@ def load_data():
         subprocess.run("zenodo_get -g *.xlsx 14727277", shell=True, text=True, check=True)
     
     # Load datasets
-    crown_data = pd.read_excel(CROWN_FILE)
-    odors_data = pd.read_excel(ODORS_FILE)
+    odors_extended_data = pd.read_excel("odors_extended.xlsx")    # from Github
+    crown_data = pd.read_excel(CROWN_FILE) # from Zenodo
+    odors_data = pd.read_excel(ODORS_FILE) # from Zenodo
     
     # Merge the datasets on 'molcode', keeping all rows from odors_data
     merged_odors_data = pd.merge(odors_data, odors_extended_data, on='molcode', how='left')
     return crown_data, merged_odors_data
     
-odors_extended_data = pd.read_excel("./odors_extended.xlsx")    
 original_data, odors_data = load_data()
 crown_data = original_data.copy()
 
