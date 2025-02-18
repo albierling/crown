@@ -13,6 +13,7 @@ from collections import Counter
 import os
 from os import path
 import subprocess
+import requests
 
 # Set the page layout to 'wide'
 st.set_page_config(layout="wide")
@@ -20,24 +21,43 @@ st.set_page_config(layout="wide")
 # Define file paths
 CROWN_FILE = "data.xlsx"
 ODORS_FILE = "odors.xlsx"
+ODORS_EXTENDED_FILE = "odors_extended.xlsx"
+ZENODO_ID = "14727277"
+GITHUB_RAW_URL = "https://raw.githubusercontent.com/albierling/crown/main/"  # Adjust if needed
 
 # Load the datasets using the new caching method
 @st.cache_data
 def load_data():
-    # get df from Zenodo if neccesary
+    # Download from Zenodo if necessary
     if not os.path.isfile(ODORS_FILE) or not os.path.isfile(CROWN_FILE):
         st.write("Downloading datasets from Zenodo...")
-        subprocess.run("zenodo_get -g *.xlsx 14727277", shell=True, text=True, check=True)
-    
+        subprocess.run(f"zenodo_get -g *.xlsx {ZENODO_ID}", shell=True, text=True, check=True)
+
+    # Ensure odors_extended.xlsx is available (from GitHub)
+    if not os.path.isfile(ODORS_EXTENDED_FILE):
+        st.write(f"Downloading {ODORS_EXTENDED_FILE} from GitHub...")
+        file_url = GITHUB_RAW_URL + ODORS_EXTENDED_FILE
+        try:
+            response = requests.get(file_url)
+            if response.status_code == 200:
+                with open(ODORS_EXTENDED_FILE, "wb") as f:
+                    f.write(response.content)
+                st.write(f"✅ Successfully downloaded {ODORS_EXTENDED_FILE}.")
+            else:
+                st.error(f"❌ Failed to download {ODORS_EXTENDED_FILE} from GitHub (Status: {response.status_code})")
+        except Exception as e:
+            st.error(f"❌ GitHub download failed: {e}")
+
     # Load datasets
-    odors_extended_data = pd.read_excel("odors_extended.xlsx")    # from Github
-    crown_data = pd.read_excel(CROWN_FILE) # from Zenodo
-    odors_data = pd.read_excel(ODORS_FILE) # from Zenodo
-    
+    odors_extended_data = pd.read_excel(ODORS_EXTENDED_FILE)  # From GitHub
+    crown_data = pd.read_excel(CROWN_FILE)  # From Zenodo
+    odors_data = pd.read_excel(ODORS_FILE)  # From Zenodo
+
     # Merge the datasets on 'molcode', keeping all rows from odors_data
     merged_odors_data = pd.merge(odors_data, odors_extended_data, on='molcode', how='left')
     return crown_data, merged_odors_data
-    
+
+# Load data
 original_data, odors_data = load_data()
 crown_data = original_data.copy()
 
