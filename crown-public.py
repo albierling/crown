@@ -28,11 +28,7 @@ GITHUB_RAW_URL = "https://raw.githubusercontent.com/albierling/crown/main/"
 # Load the datasets using the new caching method
 @st.cache_data
 def load_data():
-    # Download from Zenodo if necessary
-    if not os.path.isfile(ODORS_FILE) or not os.path.isfile(CROWN_FILE):
-        st.write("Downloading datasets from Zenodo...")
-        subprocess.run(f"zenodo_get -g *.xlsx {ZENODO_ID}", shell=True, text=True, check=True)
-
+   
     # Ensure odors_extended.xlsx is available (from GitHub)
     if not os.path.isfile(ODORS_EXTENDED_FILE):
         st.write(f"Downloading {ODORS_EXTENDED_FILE} from GitHub...")
@@ -47,6 +43,12 @@ def load_data():
                 st.error(f"❌ Failed to download {ODORS_EXTENDED_FILE} from GitHub (Status: {response.status_code})")
         except Exception as e:
             st.error(f"❌ GitHub download failed: {e}")
+
+     # Download from Zenodo if necessary
+    if not os.path.isfile(ODORS_FILE) or not os.path.isfile(CROWN_FILE):
+        st.write("Downloading datasets from Zenodo...")
+        subprocess.run(f"zenodo_get -g *.xlsx {ZENODO_ID}", shell=True, text=True, check=True)
+
 
     # Load datasets
     odors_extended_data = pd.read_excel(ODORS_EXTENDED_FILE)  # From GitHub
