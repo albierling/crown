@@ -11,7 +11,7 @@ pillow
 wordcloud
 zenodo_get
 wordcloud
-rdkit-pypi
+rdkit
 numpy
 collections
 os
