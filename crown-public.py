@@ -32,13 +32,13 @@ def load_data():
     
     # Load datasets
     crown_data = pd.read_excel(CROWN_FILE)
-    odors_extended_data = pd.read_excel("odors_extended.xlsx")
     odors_data = pd.read_excel(ODORS_FILE)
     
     # Merge the datasets on 'molcode', keeping all rows from odors_data
     merged_odors_data = pd.merge(odors_data, odors_extended_data, on='molcode', how='left')
     return crown_data, merged_odors_data
     
+odors_extended_data = pd.read_excel("odors_extended.xlsx")    
 original_data, odors_data = load_data()
 crown_data = original_data.copy()
 
