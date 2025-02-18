@@ -8,3 +8,9 @@ pydeck
 pillow
 wordcloud
 zenodo_get
+wordcloud
+rdkit
+numpy
+PIL
+collections
+os
