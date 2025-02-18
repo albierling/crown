@@ -206,61 +206,62 @@ with st.expander("**Hintergrund zur Studie**"):
 ############# Sidebar ################################################################
 # Sidebar for molecule selection and description buttons
 with st.sidebar:
-    st.image('crown-logo.png', width=300)
+   st.image('crown-logo.png', width=300)
 
-    molcodes = crown_data['molcode'].unique()
-    sampling_groups = crown_data['sampling_group'].unique()
+   molcodes = crown_data['molcode'].unique()
+   sampling_groups = crown_data['sampling_group'].unique()
     
-    #############################
-    st.subheader("Auswahl von Molekül und Filtern")
-    st.write("Hier kann das Molekül sowie die untersuchten Testgruppen ausgewählt werden.")
-    ##############################
-    col1, col2, col3 = st.columns([1, 1, 1])            
-
-    with col1:
-        selected_molcode = st.sidebar.selectbox('Ausgewähltes Molekül', molcodes, index=2)
-
-    with col2:
-        if selected_molcode:
-            participant_group = st.sidebar.multiselect('Ausgewählte Testgruppen', sampling_groups, default=[sampling_groups[0]])
-        if participant_group:
-            crown_data = crown_data[crown_data['sampling_group'].isin(participant_group)]
-
-    with col3:
-        # Get the list of German labels for selection
-        german_dimensions = list(dimension_labels.values())
-
-        # Use the German labels for display in the multiselect
-        selected_german_dimensions = st.sidebar.multiselect('Ausgewählte Bewertungsdimensionen', german_dimensions, default=german_dimensions[:4])
-
-        # Map the selected German labels back to their corresponding English dimension keys
-        selected_dimensions = [key for key, value in dimension_labels.items() if value in selected_german_dimensions]
-        #dimensions = ['pleasant', 'intensive', 'familiar', 'edible', 'disgusting', 'warm', 'cold', 'irritating']
-        #selected_dimensions = st.multiselect('Ausgewählte Bewertungsdimensionen', dimensions, default=dimensions[:4])
-
-    ########################
-    st.subheader("Anpassung der Wortwolke")
-    # Define columns
-    col1, col2 = st.columns([1, 1])
-
-    max_no = 1500
-    with col1: 
-        word_limit = st.slider("Maximale Wörter, die in die Wortwolke eingehen", min_value=10, max_value=max_no, value=100)
-    with col2:
-        colormap = st.selectbox("Farbschema für die Wortwolke", ["plasma", "viridis", "magma", "inferno", "Blues"])
-
-    # Simulate 'anchoring' by placing content at the end of the sidebar block
-    st.markdown("---")  # Horizontal line to separate content
-
-    ###### Logos etc.
-    st.write("Diese Forschung wurde finanziert vom Projekt 'Olfactorial Perceptronics', gefördert von der " 
-             " VolkswagenStiftung. Mehr Informationen zum Projekt siehe https://perceptronics.science/.")
-    
-    # Simulate 'anchoring' by placing content at the end of the sidebar block
-    st.markdown("---")  # Horizontal line to separate content
-    
-    #st.image('perceptronics-logo-blau.png', width=170)
-    st.image('logos-tud-fsu-vws.png', width=300)
+   #############################
+   st.subheader("Auswahl von Molekül und Filtern")
+   st.write("Hier kann das Molekül sowie die untersuchten Testgruppen ausgewählt werden.")
+   ##############################
+   col1, col2, col3 = st.columns([1, 1, 1])            
+   
+   with col1:
+     selected_molcode = st.sidebar.selectbox('Ausgewähltes Molekül', molcodes, index=2)
+   
+   with col2:
+     if selected_molcode:
+         participant_group = st.sidebar.multiselect('Ausgewählte Testgruppen', sampling_groups, default=[sampling_groups[0]])
+     if participant_group:
+         crown_data = crown_data[crown_data['sampling_group'].isin(participant_group)]
+   
+   with col3:
+     # Get the list of German labels for selection
+     german_dimensions = list(dimension_labels.values())
+   
+     # Use the German labels for display in the multiselect
+     selected_german_dimensions = st.sidebar.multiselect('Ausgewählte Bewertungsdimensionen', german_dimensions, default=german_dimensions[:4])
+   
+     # Map the selected German labels back to their corresponding English dimension keys
+     selected_dimensions = [key for key, value in dimension_labels.items() if value in selected_german_dimensions]
+     #dimensions = ['pleasant', 'intensive', 'familiar', 'edible', 'disgusting', 'warm', 'cold', 'irritating']
+     #selected_dimensions = st.multiselect('Ausgewählte Bewertungsdimensionen', dimensions, default=dimensions[:4])
+   
+   ########################
+   st.subheader("Anpassung der Wortwolke")
+   # Define columns
+   col1, col2 = st.columns([1, 1])
+   
+   max_no = 1500
+   with col1: 
+     word_limit = st.slider("Maximale Wörter, die in die Wortwolke eingehen", min_value=10, max_value=max_no, value=100)
+   with col2:
+     colormap = st.selectbox("Farbschema für die Wortwolke", ["plasma", "viridis", "magma", "inferno", "Blues"])
+   
+   # Simulate 'anchoring' by placing content at the end of the sidebar block
+   st.markdown("---")  # Horizontal line to separate content
+   
+   ###### Logos etc.
+   st.write("Diese Forschung wurde finanziert vom Projekt 'Olfactorial Perceptronics', gefördert von der " 
+          " VolkswagenStiftung. Mehr Informationen zum Projekt siehe https://perceptronics.science/.")
+   
+   # Simulate 'anchoring' by placing content at the end of the sidebar block
+   st.markdown("---")  # Horizontal line to separate content
+   
+   if os.path.isfile('logos-tud-fsu-vws.png'):
+      #st.image('perceptronics-logo-blau.png', width=170)
+      st.image('logos-tud-fsu-vws.png', width=300)
 
 ############# Sidebar end ############################################################
 
