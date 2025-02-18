@@ -24,15 +24,15 @@ def load_data():
         st.write(subprocess.check_output("zenodo_get -g *.xlsx 14727277", shell=True, text=True))
     
     
-        crown_data = pd.read_excel('./data.xlsx')
-        odors_data = pd.read_excel('./odors.xlsx')
-        odors_extended_data = pd.read_excel('./odors_extended.xlsx')  # Load extended file
-        # Merge the datasets on 'molcode', keeping all rows from odors_data
-        odors_data = pd.merge(odors_data, odors_extended_data, on='molcode', how='left')
-        return crown_data, odors_data
+    crown_data = pd.read_excel('./data.xlsx')
+    odors_data = pd.read_excel('./odors.xlsx')
+    odors_extended_data = pd.read_excel('./odors_extended.xlsx')  # Load extended file
+    # Merge the datasets on 'molcode', keeping all rows from odors_data
+    odors_data = pd.merge(odors_data, odors_extended_data, on='molcode', how='left')
+    return crown_data, odors_data
     
-    original_data, odors_data = load_data()
-    crown_data = original_data.copy()
+original_data, odors_data = load_data()
+crown_data = original_data.copy()
 
 # Function to compute molecular properties
 @st.cache_data
