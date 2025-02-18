@@ -16,20 +16,28 @@ from os import path
 # Set the page layout to 'wide'
 st.set_page_config(layout="wide")
 
+# Define file paths
+CROWN_FILE = "./data.xlsx"
+ODORS_FILE = "./odors.xlsx"
+ODORS_EXTENDED_FILE = "./odors_extended.xlsx"
+
 # Load the datasets using the new caching method
 @st.cache_data
 def load_data():
     # get df from Zenodo if neccesary
-    if not os.path.isfile(odors_data):
-        st.write(subprocess.check_output("zenodo_get -g *.xlsx 14727277", shell=True, text=True))
+    if not os.path.isfile(ODORS_FILE) or not os.path.isfile(ODORS_EXTENDED_FILE):
+        st.write("Downloading datasets from Zenodo...")
+        subprocess.run("zenodo_get -g *.xlsx 14727277", shell=True, text=True, check=True)
+
     
+    # Load datasets
+    crown_data = pd.read_excel(CROWN_FILE)
+    odors_data = pd.read_excel(ODORS_FILE)
+    odors_extended_data = pd.read_excel(ODORS_EXTENDED_FILE)
     
-    crown_data = pd.read_excel('./data.xlsx')
-    odors_data = pd.read_excel('./odors.xlsx')
-    odors_extended_data = pd.read_excel('./odors_extended.xlsx')  # Load extended file
     # Merge the datasets on 'molcode', keeping all rows from odors_data
-    odors_data = pd.merge(odors_data, odors_extended_data, on='molcode', how='left')
-    return crown_data, odors_data
+    merged_odors_data = pd.merge(odors_data, odors_extended_data, on='molcode', how='left')
+    return crown_data, merged_odors_data
     
 original_data, odors_data = load_data()
 crown_data = original_data.copy()
@@ -245,7 +253,7 @@ with tab1:
     mol_data = crown_data[crown_data['molcode'] == selected_molcode]
     mol_data = mol_data[mol_data['inclusion'] == 1]
 
-    german_name = odors_data.loc[odors_data['molcode'] == selected_molcode, 'german_name'].values[0]
+    german_name = merged_odors_data.loc[merged_odors_data['molcode'] == selected_molcode, 'german_name'].values[0]
     sampling_groups_count = mol_data['sampling_group'].value_counts()
 
     sociodemographic_data = mol_data
@@ -260,14 +268,14 @@ with tab1:
     ########################################################
 
     st.subheader("Chemische Eigenschaften")
-    german_name = odors_data.loc[odors_data['molcode'] == selected_molcode, 'german_name'].values[0]
+    german_name = merged_odors_data.loc[merged_odors_data['molcode'] == selected_molcode, 'german_name'].values[0]
     st.write(f"#####  {german_name}")
 
     col1, col2 = st.columns([1, 3])
 
     with col1:
         
-        smiles = odors_data.loc[odors_data['molcode'] == selected_molcode, 'SMILES'].values[0]
+        smiles = merged_odors_data.loc[merged_odors_data['molcode'] == selected_molcode, 'SMILES'].values[0]
         mol_structure = Chem.MolFromSmiles(smiles)
 
         if mol_structure:
@@ -281,11 +289,11 @@ with tab1:
         
         
         # Display the 'smell' and 'occurrence' information from the extended file
-        smell_description = odors_data.loc[odors_data['molcode'] == selected_molcode, 'smell'].values[0]
-        occurence = odors_data.loc[odors_data['molcode'] == selected_molcode, 'occurence'].values[0]
-        cite1 = odors_data.loc[odors_data['molcode'] == selected_molcode, 'cite1'].values[0]
-        cite2 = odors_data.loc[odors_data['molcode'] == selected_molcode, 'cite2'].values[0]
-        cite3 = odors_data.loc[odors_data['molcode'] == selected_molcode, 'cite3'].values[0]
+        smell_description = merged_odors_data.loc[merged_odors_data['molcode'] == selected_molcode, 'smell'].values[0]
+        occurence = merged_odors_data.loc[merged_odors_data['molcode'] == selected_molcode, 'occurence'].values[0]
+        cite1 = merged_odors_data.loc[merged_odors_data['molcode'] == selected_molcode, 'cite1'].values[0]
+        cite2 = merged_odors_data.loc[merged_odors_data['molcode'] == selected_molcode, 'cite2'].values[0]
+        cite3 = merged_odors_data.loc[merged_odors_data['molcode'] == selected_molcode, 'cite3'].values[0]
 
         # Only display if the value is not NaN
         if pd.notna(smell_description):
