@@ -10,7 +10,6 @@ wordcloud
 zenodo_get
 wordcloud
 deepchem
-rdkit-chem
 numpy
 PIL
 collections
