@@ -11,5 +11,4 @@ zenodo_get
 wordcloud
 rdkit-pypi
 numpy
-collections
 os
