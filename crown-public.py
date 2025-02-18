@@ -20,7 +20,7 @@ st.set_page_config(layout="wide")
 # Define file paths
 CROWN_FILE = "./data.xlsx"
 ODORS_FILE = "./odors.xlsx"
-ODORS_EXTENDED_FILE = "./odors_extended.xlsx"
+odors_extended_data = pd.read_excel("./odors_extended.xlsx")
 
 # Load the datasets using the new caching method
 @st.cache_data
@@ -29,12 +29,10 @@ def load_data():
     if not os.path.isfile(ODORS_FILE) or not os.path.isfile(ODORS_EXTENDED_FILE):
         st.write("Downloading datasets from Zenodo...")
         subprocess.run("zenodo_get -g *.xlsx 14727277", shell=True, text=True, check=True)
-
     
     # Load datasets
     crown_data = pd.read_excel(CROWN_FILE)
     odors_data = pd.read_excel(ODORS_FILE)
-    odors_extended_data = pd.read_excel(ODORS_EXTENDED_FILE)
     
     # Merge the datasets on 'molcode', keeping all rows from odors_data
     merged_odors_data = pd.merge(odors_data, odors_extended_data, on='molcode', how='left')
