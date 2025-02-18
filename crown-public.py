@@ -18,9 +18,9 @@ import subprocess
 st.set_page_config(layout="wide")
 
 # Define file paths
-CROWN_FILE = "./data.xlsx"
-ODORS_FILE = "./odors.xlsx"
-odors_extended_data = pd.read_excel("./odors_extended.xlsx")
+CROWN_FILE = "data.xlsx"
+ODORS_FILE = "odors.xlsx"
+odors_extended_data = pd.read_excel("odors_extended.xlsx")
 
 # Load the datasets using the new caching method
 @st.cache_data
