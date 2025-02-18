@@ -20,7 +20,7 @@ st.set_page_config(layout="wide")
 @st.cache_data
 def load_data():
     # get df from Zenodo if neccesary
-    if not os.path.isfile(df_file):
+    if not os.path.isfile(odors_data):
         st.write(subprocess.check_output("zenodo_get -g *.xlsx 14727277", shell=True, text=True))
     
     
