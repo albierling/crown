@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
+from matplotlib import font_manager
 
 import seaborn as sns
 from wordcloud import WordCloud
@@ -28,36 +29,65 @@ GITHUB_RAW_URL = "https://raw.githubusercontent.com/albierling/crown/main/"
 # Load the datasets using the new caching method
 @st.cache_data
 def load_data():
+   # Ensure odors_extended.xlsx is available (from GitHub)
+   if not os.path.isfile(ODORS_EXTENDED_FILE):
+      st.write(f"Downloading {ODORS_EXTENDED_FILE} from GitHub...")
+      file_url = GITHUB_RAW_URL + ODORS_EXTENDED_FILE
+      try:
+         response = requests.get(file_url)
+         if response.status_code == 200:
+             with open(ODORS_EXTENDED_FILE, "wb") as f:
+                 f.write(response.content)
+             st.write(f"✅ Successfully downloaded {ODORS_EXTENDED_FILE}.")
+         else:
+             st.error(f"❌ Failed to download {ODORS_EXTENDED_FILE} from GitHub (Status: {response.status_code})")
+      except Exception as e:
+         st.error(f"❌ GitHub download failed: {e}")
    
-    # Ensure odors_extended.xlsx is available (from GitHub)
-    if not os.path.isfile(ODORS_EXTENDED_FILE):
-        st.write(f"Downloading {ODORS_EXTENDED_FILE} from GitHub...")
-        file_url = GITHUB_RAW_URL + ODORS_EXTENDED_FILE
-        try:
-            response = requests.get(file_url)
-            if response.status_code == 200:
-                with open(ODORS_EXTENDED_FILE, "wb") as f:
-                    f.write(response.content)
-                st.write(f"✅ Successfully downloaded {ODORS_EXTENDED_FILE}.")
-            else:
-                st.error(f"❌ Failed to download {ODORS_EXTENDED_FILE} from GitHub (Status: {response.status_code})")
-        except Exception as e:
-            st.error(f"❌ GitHub download failed: {e}")
+   # Download from Zenodo if necessary
+   if not os.path.isfile(ODORS_FILE) or not os.path.isfile(CROWN_FILE):
+     placeholder = st.empty()
+     placeholder.write("Downloading datasets from Zenodo...")
+     subprocess.run(f"zenodo_get {ZENODO_ID}", shell=True, text=True, check=True)
+     placeholder.empty()
+   
+   # Load datasets
+   odors_extended_data = pd.read_excel(ODORS_EXTENDED_FILE)  # From GitHub
+   crown_data = pd.read_excel(CROWN_FILE)  # From Zenodo
+   odors_data = pd.read_excel(ODORS_FILE)  # From Zenodo
+   
+   # Merge the datasets on 'molcode', keeping all rows from odors_data
+   merged_odors_data = pd.merge(odors_data, odors_extended_data, on='molcode', how='left')
+   return crown_data, merged_odors_data
 
-     # Download from Zenodo if necessary
-    if not os.path.isfile(ODORS_FILE) or not os.path.isfile(CROWN_FILE):
-        st.write("Downloading datasets from Zenodo...")
-        subprocess.run(f"zenodo_get {ZENODO_ID}", shell=True, text=True, check=True)
-
-
-    # Load datasets
-    odors_extended_data = pd.read_excel(ODORS_EXTENDED_FILE)  # From GitHub
-    crown_data = pd.read_excel(CROWN_FILE)  # From Zenodo
-    odors_data = pd.read_excel(ODORS_FILE)  # From Zenodo
-
-    # Merge the datasets on 'molcode', keeping all rows from odors_data
-    merged_odors_data = pd.merge(odors_data, odors_extended_data, on='molcode', how='left')
-    return crown_data, merged_odors_data
+def select_font(language, display_fontfile=False):
+   # rather hacky way to select the right font
+   noto = 'NotoSans-Regular'
+   if language == 'Chinese':
+     noto = 'NotoSansCJK-Regular'
+   elif language == 'Hebrew':
+     noto = 'NotoSansHebrew-Regular'
+   elif language == 'Hindi':
+     noto = 'NotoSansDevanagari-Regular'
+   
+   flist = font_manager.findSystemFonts(fontpaths=None, fontext='ttf')
+   fn_noto = ''
+   for fn in flist:
+     if noto in fn:
+         fn_noto = fn
+         break
+   
+   ## select font for word cloud
+   try:
+     font_file = font_manager.findfont('Arial Unicode MS', fallback_to_default=False)
+   except:
+     font_search = font_manager.FontProperties(fname=fn_noto)
+     font_file = font_manager.findfont(font_search)
+   
+   if display_fontfile:
+     st.write('Font: ' + font_file)
+   
+   return font_file
 
 # Load data
 original_data, merged_odors_data = load_data()
@@ -112,8 +142,9 @@ def generate_word_cloud_cached(free_descriptions, word_limit, colormap):
     d = path.dirname(__file__) if "__file__" in locals() else os.getcwd()
     mask = np.array(Image.open(path.join(d, 'mask.png')))
 
+    font_file = select_font('English')
     wordcloud = WordCloud(width=800, height=400, max_words=word_limit,
-                          font_path='./NotoSans_Condensed-SemiBold.ttf',
+                          font_path=font_file,
                           mask=mask, 
                           background_color='white', 
                           colormap=colormap,
