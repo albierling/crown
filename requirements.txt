@@ -9,7 +9,7 @@ pillow
 wordcloud
 zenodo_get
 wordcloud
-rdkit
+rdkit-pypi
 numpy
 collections
 os
