@@ -19,6 +19,11 @@ st.set_page_config(layout="wide")
 # Load the datasets using the new caching method
 @st.cache_data
 def load_data():
+# get df from Zenodo if neccesary
+if not os.path.isfile(df_file):
+    st.write(subprocess.check_output("zenodo_get -g *.xlsx 14727277", shell=True, text=True))
+
+
     crown_data = pd.read_excel('./data.xlsx')
     odors_data = pd.read_excel('./odors.xlsx')
     odors_extended_data = pd.read_excel('./odors_extended.xlsx')  # Load extended file
