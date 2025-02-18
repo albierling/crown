@@ -58,7 +58,7 @@ def load_data():
     return crown_data, merged_odors_data
 
 # Load data
-original_data, odors_data = load_data()
+original_data, merged_odors_data = load_data()
 crown_data = original_data.copy()
 
 # Function to compute molecular properties
