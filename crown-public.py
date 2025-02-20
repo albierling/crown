@@ -291,7 +291,7 @@ with st.sidebar:
    st.markdown("---")  # Horizontal line to separate content
    
    if os.path.isfile('logos-tud-fsu-vws.png'):
-      #st.image('perceptronics-logo-blau.png', width=170)
+      st.image('perceptronics-logo-blau.png', width=170)
       st.image('logos-tud-fsu-vws.png', width=300)
 
 ############# Sidebar end ############################################################
