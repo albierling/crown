@@ -299,7 +299,7 @@ with st.sidebar:
 
 ############# Main #####################################################################
 
-tab1, tab2 = st.tabs(["Datenbank", "Infos für Studienteilnehmer*innen"])
+tab1 = st.tabs(["Datenbank"])
 
 with tab1:
     ########################################################
@@ -425,7 +425,3 @@ with tab1:
         free_descriptions = mol_data['free_description'].apply(parse_free_descriptions)
         wordcloud_fig = generate_word_cloud_cached(free_descriptions, word_limit, colormap)
         st.pyplot(wordcloud_fig)
-
-with tab2:
-    st.write("Sie haben an dieser Studie teilgenommen und möchten wissen, an welchen Gerüchen Sie damals geschnuppert haben?"
-             " add...")
