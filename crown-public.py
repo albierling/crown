@@ -299,82 +299,77 @@ with st.sidebar:
 
 ############# Main #####################################################################
 
-tab1 = st.tabs("Datenbank")
+mol_data = crown_data[crown_data['molcode'] == selected_molcode]
+mol_data = mol_data[mol_data['inclusion'] == 1]
 
-with tab1:
-    ########################################################
-    mol_data = crown_data[crown_data['molcode'] == selected_molcode]
-    mol_data = mol_data[mol_data['inclusion'] == 1]
+german_name = merged_odors_data.loc[merged_odors_data['molcode'] == selected_molcode, 'german_name'].values[0]
+sampling_groups_count = mol_data['sampling_group'].value_counts()
 
-    german_name = merged_odors_data.loc[merged_odors_data['molcode'] == selected_molcode, 'german_name'].values[0]
-    sampling_groups_count = mol_data['sampling_group'].value_counts()
+sociodemographic_data = mol_data
+sample_size = len(sociodemographic_data['code'].unique())
+mean_age = round(np.mean(sociodemographic_data['age']), 2)
+std_age = round(np.std(sociodemographic_data['age']), 2)
 
-    sociodemographic_data = mol_data
-    sample_size = len(sociodemographic_data['code'].unique())
-    mean_age = round(np.mean(sociodemographic_data['age']), 2)
-    std_age = round(np.std(sociodemographic_data['age']), 2)
+mean_pleasantness = mol_data['pleasant'].mean()
+mean_intensity = mol_data['intensive'].mean()
 
-    mean_pleasantness = mol_data['pleasant'].mean()
-    mean_intensity = mol_data['intensive'].mean()
+top_descriptions = get_top_descriptions(mol_data, selected_molcode)
+########################################################
 
-    top_descriptions = get_top_descriptions(mol_data, selected_molcode)
-    ########################################################
+st.subheader("Chemische Eigenschaften")
+german_name = merged_odors_data.loc[merged_odors_data['molcode'] == selected_molcode, 'german_name'].values[0]
+st.write(f"#####  {german_name}")
 
-    st.subheader("Chemische Eigenschaften")
-    german_name = merged_odors_data.loc[merged_odors_data['molcode'] == selected_molcode, 'german_name'].values[0]
-    st.write(f"#####  {german_name}")
+col1, col2 = st.columns([1, 3])
 
-    col1, col2 = st.columns([1, 3])
+with col1:
+   smiles = merged_odors_data.loc[merged_odors_data['molcode'] == selected_molcode, 'SMILES'].values[0]
+   mol_structure = Chem.MolFromSmiles(smiles)
 
-    with col1:
-        
-        smiles = merged_odors_data.loc[merged_odors_data['molcode'] == selected_molcode, 'SMILES'].values[0]
-        mol_structure = Chem.MolFromSmiles(smiles)
-
-        if mol_structure:
-            mol_image = Draw.MolToImage(mol_structure, size=(200, 200))
-            st.image(mol_image)
-        else:
-            st.error(f"Failed to generate molecule structure for {german_name}. Please check your input.")
+   if mol_structure:
+      mol_image = Draw.MolToImage(mol_structure, size=(200, 200))
+      st.image(mol_image)
+   else:
+      st.error(f"Failed to generate molecule structure for {german_name}. Please check your input.")
 
 
-    with col2:
+with col2:
         
         
-        # Display the 'smell' and 'occurrence' information from the extended file
-        smell_description = merged_odors_data.loc[merged_odors_data['molcode'] == selected_molcode, 'smell'].values[0]
-        occurence = merged_odors_data.loc[merged_odors_data['molcode'] == selected_molcode, 'occurence'].values[0]
-        cite1 = merged_odors_data.loc[merged_odors_data['molcode'] == selected_molcode, 'cite1'].values[0]
-        cite2 = merged_odors_data.loc[merged_odors_data['molcode'] == selected_molcode, 'cite2'].values[0]
-        cite3 = merged_odors_data.loc[merged_odors_data['molcode'] == selected_molcode, 'cite3'].values[0]
+   # Display the 'smell' and 'occurrence' information from the extended file
+   smell_description = merged_odors_data.loc[merged_odors_data['molcode'] == selected_molcode, 'smell'].values[0]
+   occurence = merged_odors_data.loc[merged_odors_data['molcode'] == selected_molcode, 'occurence'].values[0]
+   cite1 = merged_odors_data.loc[merged_odors_data['molcode'] == selected_molcode, 'cite1'].values[0]
+   cite2 = merged_odors_data.loc[merged_odors_data['molcode'] == selected_molcode, 'cite2'].values[0]
+   cite3 = merged_odors_data.loc[merged_odors_data['molcode'] == selected_molcode, 'cite3'].values[0]
 
-        # Only display if the value is not NaN
-        if pd.notna(smell_description):
-            st.markdown(f"""
-            <div style='padding:10px; border: 3px solid #4CAF50; border-radius: 10px; background-color: #eaffea;'>
-            <strong>Geruchsbeschreibung in Parfüm-/Chemiedatenbanken:</strong> {smell_description}
-            </div>
-            """, unsafe_allow_html=True)
+   # Only display if the value is not NaN
+   if pd.notna(smell_description):
+      st.markdown(f"""
+      <div style='padding:10px; border: 3px solid #4CAF50; border-radius: 10px; background-color: #eaffea;'>
+      <strong>Geruchsbeschreibung in Parfüm-/Chemiedatenbanken:</strong> {smell_description}
+      </div>
+      """, unsafe_allow_html=True)
 
-        if pd.notna(occurence):
-            st.write(f"**Vorkommen und Anwendung:** {occurence}")
+   if pd.notna(occurence):
+      st.write(f"**Vorkommen und Anwendung:** {occurence}")
 
-        # Display molecular weight and size
-        molecular_weight, size = calculate_properties_cached(smiles)
-        st.write(f"**Molekulargewicht:** {molecular_weight:.2f} g/mol")
-        st.write(f"**Größe (Anzahl an Atomen):** {size}")
+      # Display molecular weight and size
+      molecular_weight, size = calculate_properties_cached(smiles)
+      st.write(f"**Molekulargewicht:** {molecular_weight:.2f} g/mol")
+      st.write(f"**Größe (Anzahl an Atomen):** {size}")
 
-        # Collect all citations that are not NaN
-        citations = [cite for cite in [cite1, cite2, cite3] if pd.notna(cite)]
+      # Collect all citations that are not NaN
+      citations = [cite for cite in [cite1, cite2, cite3] if pd.notna(cite)]
 
-        if citations:
-            # Join the citations with commas and display them
-            st.caption(f":globe_with_meridians: {', '.join(citations)}")
+   if citations:
+      # Join the citations with commas and display them
+      st.caption(f":globe_with_meridians: {', '.join(citations)}")
 
         
 
-    st.subheader("Bewertungsdimensionen auf visuellen Analogskalen")
-    sentence = ("Im Folgenden können bis zu acht Bewertungsdimensionen angeschaut werden. Die Abbildungen zeigen je die Verteilung der"
+st.subheader("Bewertungsdimensionen auf visuellen Analogskalen")
+sentence = ("Im Folgenden können bis zu acht Bewertungsdimensionen angeschaut werden. Die Abbildungen zeigen je die Verteilung der"
                 " Bewertungen auf der Skala von 1 = gar nicht bis 100 = sehr. Für manche Gerüche ist dabei die Verteilung sehr breit, d.h.,"
                 " die Probandinnen und Probanden sind sich eher uneinig, ob der Geruch z.B. angenehm oder intensiv ist. Für andere Gerüche"
                 " gibt es klarere Tendenzen, z.B. häufig eine stark linkssteile Verteilung für 'essbar'."
@@ -382,46 +377,47 @@ with tab1:
                 f"{', '.join([f'{v} aus der {k} Gruppe' for k, v in sampling_groups_count.items()])}. "
                 f"Die Stichprobe war im Mittel {mean_age} Jahre alt mit einer Streuung von {std_age} Jahren."
                 f" Der Geruch wurde im Mittel als **{mean_pleasantness:.2f} angenehm** und **{mean_intensity:.2f} intensiv** bewertet.")
-    st.write(sentence)
+st.write(sentence)
 
-    plot_distributions(mol_data, selected_dimensions)
+plot_distributions(mol_data, selected_dimensions)
 
-    ################################
-    st.subheader("Freie Beschreibungen")
-    st.write("Im folgenden sind die 25 häufigsten freien Beschreibungen für den ausgewählten Geruch aufgelistet (Abbildung unten links)." 
+################################
+st.subheader("Freie Beschreibungen")
+st.write("Im folgenden sind die 25 häufigsten freien Beschreibungen für den ausgewählten Geruch aufgelistet (Abbildung unten links)." 
                 " Die rechte untere Abbildung zeigt eine Wortwolke, die die Häufigkeiten der freien Beschreibungen anhand der Größe des jeweiligen" 
                 " Wortes darstellt. Um die Anzahl der zu berücksichtigenden Wörter anzupassen, kann links in der Seitenleiste zwischen mindestens 10"
                 " und maximal 1500 Wörtern ausgewählt werden. Die freien Beschreibungen der Probandinnen und Probanden wurden für beide Abbildungen"
                 " zuvor standardisiert, d.h., zum Beispiel verschiedene Schreibweisen der gleichen Beschreibung wie z.B. 'süßlich' und 'süß' zusammengefasst."
                 " Dadurch wurden aus insgesamt mehr als 13000 freien Beschreibungen eine Liste von ca. 3500 einzigartigen Beschreibungen - je nach Geruch"
                 " kommen unterschiedlich viele davon vor.")
-    col1, col2 = st.columns([1, 3])            
 
-    with col1:
-        top_descriptors = get_top_descriptions(crown_data, selected_molcode)
-        df_descriptors = pd.DataFrame(top_descriptors, columns=['Descriptor', 'Frequency'])
-        df_descriptors = df_descriptors.sort_values(by='Frequency', ascending=False)
+col1, col2 = st.columns([1, 3])            
 
-        sns.set_style("whitegrid")
-        fig, ax = plt.subplots(figsize=(4, 10))
-        sns.barplot(x='Frequency', y='Descriptor', data=df_descriptors, palette='magma')
+with col1:
+   top_descriptors = get_top_descriptions(crown_data, selected_molcode)
+   df_descriptors = pd.DataFrame(top_descriptors, columns=['Descriptor', 'Frequency'])
+   df_descriptors = df_descriptors.sort_values(by='Frequency', ascending=False)
 
-        ax.set_xlabel('')
-        ax.set_ylabel('')
-        ax.tick_params(axis='y', labelsize=12)
-        ax.spines['top'].set_visible(False)
-        ax.spines['right'].set_visible(False)
-        ax.spines['left'].set_visible(False)
-        ax.spines['bottom'].set_visible(False)
-        ax.axes.xaxis.set_visible(False)
-        ax.grid(False)
+   sns.set_style("whitegrid")
+   fig, ax = plt.subplots(figsize=(4, 10))
+   sns.barplot(x='Frequency', y='Descriptor', data=df_descriptors, palette='magma')
 
-        for index, value in enumerate(df_descriptors['Frequency']):
-            ax.text(value, index, f'{value}', va='baseline', ha='left', fontsize=12)
+   ax.set_xlabel('')
+   ax.set_ylabel('')
+   ax.tick_params(axis='y', labelsize=12)
+   ax.spines['top'].set_visible(False)
+   ax.spines['right'].set_visible(False)
+   ax.spines['left'].set_visible(False)
+   ax.spines['bottom'].set_visible(False)
+   ax.axes.xaxis.set_visible(False)
+   ax.grid(False)
 
-        st.pyplot(fig)
+   for index, value in enumerate(df_descriptors['Frequency']):
+      ax.text(value, index, f'{value}', va='baseline', ha='left', fontsize=12)
 
-    with col2:
-        free_descriptions = mol_data['free_description'].apply(parse_free_descriptions)
-        wordcloud_fig = generate_word_cloud_cached(free_descriptions, word_limit, colormap)
-        st.pyplot(wordcloud_fig)
+   st.pyplot(fig)
+
+with col2:
+   free_descriptions = mol_data['free_description'].apply(parse_free_descriptions)
+   wordcloud_fig = generate_word_cloud_cached(free_descriptions, word_limit, colormap)
+   st.pyplot(wordcloud_fig)
