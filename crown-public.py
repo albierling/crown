@@ -62,8 +62,8 @@ def load_data():
 
 def select_font(language, display_fontfile=False):
    # rather hacky way to select the right font
-   noto = 'NotoSans-Regular'
-   #noto = 'NotoSans_Condensed-SemiBold'
+   #noto = 'NotoSans-Regular'
+   noto = 'NotoSans_Condensed' # 'NotoSans_Condensed-SemiBold'
    if language == 'Chinese':
      noto = 'NotoSansCJK-Regular'
    elif language == 'Hebrew':
