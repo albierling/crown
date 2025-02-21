@@ -60,34 +60,35 @@ def load_data():
    merged_odors_data = pd.merge(odors_data, odors_extended_data, on='molcode', how='left')
    return crown_data, merged_odors_data
 
-#def select_font(language, display_fontfile=False):
-#   # rather hacky way to select the right font
-#   noto = 'NotoSans-Regular'
-#   if language == 'Chinese':
-#     noto = 'NotoSansCJK-Regular'
-#   elif language == 'Hebrew':
-#     noto = 'NotoSansHebrew-Regular'
-#   elif language == 'Hindi':
-#     noto = 'NotoSansDevanagari-Regular'
+def select_font(language, display_fontfile=False):
+   # rather hacky way to select the right font
+   #noto = 'NotoSans-Regular'
+   noto = 'NotoSans_Condensed-SemiBold'
+   #if language == 'Chinese':
+   #  noto = 'NotoSansCJK-Regular'
+   #elif language == 'Hebrew':
+   #  noto = 'NotoSansHebrew-Regular'
+   #elif language == 'Hindi':
+   #  noto = 'NotoSansDevanagari-Regular'
    
-#   flist = font_manager.findSystemFonts(fontpaths=None, fontext='ttf')
-#   fn_noto = ''
-#   for fn in flist:
-#     if noto in fn:
-#         fn_noto = fn
-#         break
+   flist = font_manager.findSystemFonts(fontpaths=None, fontext='ttf')
+   fn_noto = ''
+   for fn in flist:
+     if noto in fn:
+         fn_noto = fn
+         break
    
-#   ## select font for word cloud
-#   try:
-#     font_file = font_manager.findfont('Arial Unicode MS', fallback_to_default=False)
-#   except:
-#     font_search = font_manager.FontProperties(fname=fn_noto)
-#     font_file = font_manager.findfont(font_search)
-#   
-#   if display_fontfile:
-#     st.write('Font: ' + font_file)
-#   
-#   return font_file
+   ## select font for word cloud
+   try:
+     font_file = font_manager.findfont('Arial Unicode MS', fallback_to_default=False)
+   except:
+     font_search = font_manager.FontProperties(fname=fn_noto)
+     font_file = font_manager.findfont(font_search)
+   
+   if display_fontfile:
+     st.write('Font: ' + font_file)
+   
+   return font_file
 
 # Load data
 original_data, merged_odors_data = load_data()
@@ -143,9 +144,9 @@ def generate_word_cloud_cached(free_descriptions, word_limit, colormap):
     d = path.dirname(__file__) if "__file__" in locals() else os.getcwd()
     mask = np.array(Image.open(path.join(d, 'mask.png')))
 
-    #font_file = select_font('English')
+    font_file = select_font('English')
     wordcloud = WordCloud(width=800, height=400, max_words=word_limit,
-                          font_path='NotoSans_Condensed-SemiBold.ttf',
+                          font_path=font_file,
                           mask=mask, 
                           background_color='white', 
                           colormap=colormap,
