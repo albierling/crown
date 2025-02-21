@@ -60,10 +60,10 @@ def load_data():
    merged_odors_data = pd.merge(odors_data, odors_extended_data, on='molcode', how='left')
    return crown_data, merged_odors_data
 
-def select_font(language, display_fontfile=False):
+#def select_font(language, display_fontfile=False):
    # rather hacky way to select the right font
    #noto = 'NotoSans-Regular'
-   noto = 'NotoSans-SemiBold'
+#   noto = 'NotoSans-SemiBold'
 
    # here not neccessary language adaptation
    #if language == 'Chinese':
@@ -73,24 +73,41 @@ def select_font(language, display_fontfile=False):
    #elif language == 'Hindi':
    #  noto = 'NotoSansDevanagari-Regular'
    
-   flist = font_manager.findSystemFonts(fontpaths=None, fontext='ttf')
-   fn_noto = ''
-   for fn in flist:
-     if noto in fn:
-         fn_noto = fn
-         break
+#   flist = font_manager.findSystemFonts(fontpaths=None, fontext='ttf')
+#   fn_noto = ''
+#   for fn in flist:
+#     if noto in fn:
+#         fn_noto = fn
+#         break
    
    ## select font for word cloud
-   try:
-     font_file = font_manager.findfont('Arial Unicode MS', fallback_to_default=False)
-   except:
-     font_search = font_manager.FontProperties(fname=fn_noto)
-     font_file = font_manager.findfont(font_search)
-   
-   if display_fontfile:
-     st.write('Font: ' + font_file)
-   
-   return font_file
+#   try:
+#     font_file = font_manager.findfont('Arial Unicode MS', fallback_to_default=False)
+#   except:
+#     font_search = font_manager.FontProperties(fname=fn_noto)
+#     font_file = font_manager.findfont(font_search)
+#   
+#   if display_fontfile:
+#     st.write('Font: ' + font_file)
+#   
+#   return font_file
+
+# trying alternative select_font function
+def select_font(language, display_fontfile=False):
+    noto_path = "fonts/NotoSans_Condensed-SemiBold.ttf"  # Path to font in repo
+
+    if not os.path.exists(noto_path):
+        st.error(f"Font file not found: {noto_path}")
+        return None
+
+    font_search = font_manager.FontProperties(fname=noto_path)
+    font_file = font_manager.findfont(font_search, fallback_to_default=True)
+
+    if display_fontfile:
+        st.write('Font: ' + font_file)
+    
+    return font_file
+
 
 # Load data
 original_data, merged_odors_data = load_data()
