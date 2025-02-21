@@ -1,3 +1,2 @@
 libxrender1
 fonts-noto
-fonts-noto_condensed
