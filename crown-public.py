@@ -63,13 +63,15 @@ def load_data():
 def select_font(language, display_fontfile=False):
    # rather hacky way to select the right font
    #noto = 'NotoSans-Regular'
-   noto = 'NotoSans_Condensed-SemiBold' # 'NotoSans_Condensed-SemiBold'
-   if language == 'Chinese':
-     noto = 'NotoSansCJK-Regular'
-   elif language == 'Hebrew':
-     noto = 'NotoSansHebrew-Regular'
-   elif language == 'Hindi':
-     noto = 'NotoSansDevanagari-Regular'
+   noto = 'NotoSans_Condensed-SemiBold'
+
+   # here not neccessary language adaptation
+   #if language == 'Chinese':
+   #  noto = 'NotoSansCJK-Regular'
+   #elif language == 'Hebrew':
+   #  noto = 'NotoSansHebrew-Regular'
+   #elif language == 'Hindi':
+   #  noto = 'NotoSansDevanagari-Regular'
    
    flist = font_manager.findSystemFonts(fontpaths=None, fontext='ttf')
    fn_noto = ''
