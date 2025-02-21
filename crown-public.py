@@ -189,7 +189,7 @@ def plot_distributions(mol_data, selected_dimensions, title_prefix=""):
         sns.histplot(mol_data[dimension], bins=20, ax=ax[i], color=colors[i % len(colors)], kde=True)
         ax[i].set_xlabel("1 = gar nicht bis 100 = sehr", fontsize=12)  # Update x-axis label to German
         ax[i].set_ylabel("Anzahl der Bewertungen", fontsize=12)  # Update y-axis label to German
-        ax[i].set_title(f"{title_prefix} {german_label.capitalize()}", fontsize=18)  # Use German label for title
+        ax[i].set_title(f"{title_prefix} {german_label.capitalize()}", fontsize=16, fontweight="bold")  # Use German label for title
         #ax[i].legend([german_label])  # Use German label for legend
         
         # Turn off the grid
