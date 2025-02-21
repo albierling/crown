@@ -101,7 +101,7 @@ def select_font(language, display_fontfile=False):
         return None
 
     font_search = font_manager.FontProperties(fname=noto_path)
-    font_file = font_manager.findfont(font_search, fallback_to_default=True)
+    font_file = font_manager.findfont(font_search, fallback_to_default=False)
 
     if display_fontfile:
         st.write('Font: ' + font_file)
