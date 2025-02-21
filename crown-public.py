@@ -64,12 +64,12 @@ def select_font(language, display_fontfile=False):
    # rather hacky way to select the right font
    noto = 'NotoSans-Regular'
    #noto = 'NotoSans_Condensed-SemiBold'
-   #if language == 'Chinese':
-   #  noto = 'NotoSansCJK-Regular'
-   #elif language == 'Hebrew':
-   #  noto = 'NotoSansHebrew-Regular'
-   #elif language == 'Hindi':
-   #  noto = 'NotoSansDevanagari-Regular'
+   if language == 'Chinese':
+     noto = 'NotoSansCJK-Regular'
+   elif language == 'Hebrew':
+     noto = 'NotoSansHebrew-Regular'
+   elif language == 'Hindi':
+     noto = 'NotoSansDevanagari-Regular'
    
    flist = font_manager.findSystemFonts(fontpaths=None, fontext='ttf')
    fn_noto = ''
@@ -93,7 +93,7 @@ def select_font(language, display_fontfile=False):
 # Load data
 original_data, merged_odors_data = load_data()
 crown_data = original_data.copy()
-crown_data = crown_data[crown_data["odor_set"] != 10] # remove patients from dataset here
+crown_data = crown_data[crown_data["sampling_group"] != 'pat'] # remove patients from dataset here
 
 # Function to compute molecular properties
 @st.cache_data
