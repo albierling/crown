@@ -145,7 +145,7 @@ def generate_word_cloud_cached(free_descriptions, word_limit, colormap):
 
     #font_file = select_font('English')
     wordcloud = WordCloud(width=800, height=400, max_words=word_limit,
-                          #font_path=font_file,
+                          font_path='NotoSans_Condensed-SemiBold.ttf',
                           mask=mask, 
                           background_color='white', 
                           colormap=colormap,
@@ -251,12 +251,6 @@ with st.sidebar:
    
    with col1:
      selected_molcode = st.sidebar.selectbox('Ausgewähltes Molekül', molcodes, index=2)
-   
-   #with col2:
-   #  if selected_molcode:
-   #      participant_group = st.sidebar.multiselect('Ausgewählte Testgruppen', sampling_groups, default=[sampling_groups[0]])
-     #if participant_group:
-     #    crown_data = crown_data[crown_data['sampling_group'].isin(participant_group)]
    
    with col2:
      # Get the list of German labels for selection
