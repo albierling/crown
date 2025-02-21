@@ -379,6 +379,7 @@ sentence = ("Im Folgenden können bis zu acht Bewertungsdimensionen angeschaut w
                 f" Der Geruch wurde im Mittel als **{mean_pleasantness:.2f} angenehm** und **{mean_intensity:.2f} intensiv** bewertet.")
 st.write(sentence)
 
+sns.set_style("dark")
 plot_distributions(mol_data, selected_dimensions)
 
 ################################
@@ -393,6 +394,7 @@ st.write("Im folgenden sind die 25 häufigsten freien Beschreibungen für den au
 
 col1, col2 = st.columns([1, 3])            
 
+sns.set_style("whitegrid")
 with col1:
    top_descriptors = get_top_descriptions(crown_data, selected_molcode)
    df_descriptors = pd.DataFrame(top_descriptors, columns=['Descriptor', 'Frequency'])
