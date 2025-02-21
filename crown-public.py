@@ -370,7 +370,6 @@ sentence = ("Im Folgenden können bis zu acht Bewertungsdimensionen angeschaut w
                 " die Probandinnen und Probanden sind sich eher uneinig, ob der Geruch z.B. angenehm oder intensiv ist. Für andere Gerüche"
                 " gibt es klarere Tendenzen, z.B. häufig eine stark linkssteile Verteilung für 'essbar'."
                 f" Das Molekül mit dem offiziellen Namen **{german_name}** wurde von insgesamt **{sample_size}** Personen bewertet. "
-                f"{', '.join([f'{v} aus der {k} Gruppe' for k, v in sampling_groups_count.items()])}. "
                 f"Die Stichprobe war im Mittel {mean_age} Jahre alt mit einer Streuung von {std_age} Jahren."
                 f" Der Geruch wurde im Mittel als **{mean_pleasantness:.2f} angenehm** und **{mean_intensity:.2f} intensiv** bewertet.")
 st.write(sentence)
