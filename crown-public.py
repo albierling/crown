@@ -94,7 +94,7 @@ def load_data():
 
 # trying alternative select_font function
 def select_font(language, display_fontfile=False):
-    noto_path = "fonts/NotoSans_Condensed-SemiBold.ttf"  # Path to font in repo
+    noto_path = "NotoSans_Condensed-SemiBold.ttf"  # Path to font in repo
 
     if not os.path.exists(noto_path):
         st.error(f"Font file not found: {noto_path}")
