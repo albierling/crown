@@ -60,38 +60,39 @@ def load_data():
    merged_odors_data = pd.merge(odors_data, odors_extended_data, on='molcode', how='left')
    return crown_data, merged_odors_data
 
-def select_font(language, display_fontfile=False):
-   # rather hacky way to select the right font
-   noto = 'NotoSans-Regular'
-   if language == 'Chinese':
-     noto = 'NotoSansCJK-Regular'
-   elif language == 'Hebrew':
-     noto = 'NotoSansHebrew-Regular'
-   elif language == 'Hindi':
-     noto = 'NotoSansDevanagari-Regular'
+#def select_font(language, display_fontfile=False):
+#   # rather hacky way to select the right font
+#   noto = 'NotoSans-Regular'
+#   if language == 'Chinese':
+#     noto = 'NotoSansCJK-Regular'
+#   elif language == 'Hebrew':
+#     noto = 'NotoSansHebrew-Regular'
+#   elif language == 'Hindi':
+#     noto = 'NotoSansDevanagari-Regular'
    
-   flist = font_manager.findSystemFonts(fontpaths=None, fontext='ttf')
-   fn_noto = ''
-   for fn in flist:
-     if noto in fn:
-         fn_noto = fn
-         break
+#   flist = font_manager.findSystemFonts(fontpaths=None, fontext='ttf')
+#   fn_noto = ''
+#   for fn in flist:
+#     if noto in fn:
+#         fn_noto = fn
+#         break
    
-   ## select font for word cloud
-   try:
-     font_file = font_manager.findfont('Arial Unicode MS', fallback_to_default=False)
-   except:
-     font_search = font_manager.FontProperties(fname=fn_noto)
-     font_file = font_manager.findfont(font_search)
-   
-   if display_fontfile:
-     st.write('Font: ' + font_file)
-   
-   return font_file
+#   ## select font for word cloud
+#   try:
+#     font_file = font_manager.findfont('Arial Unicode MS', fallback_to_default=False)
+#   except:
+#     font_search = font_manager.FontProperties(fname=fn_noto)
+#     font_file = font_manager.findfont(font_search)
+#   
+#   if display_fontfile:
+#     st.write('Font: ' + font_file)
+#   
+#   return font_file
 
 # Load data
 original_data, merged_odors_data = load_data()
 crown_data = original_data.copy()
+crown_data = crown_data[crown_data["odor_set"] != 10] # remove patients from dataset here
 
 # Function to compute molecular properties
 @st.cache_data
@@ -142,9 +143,9 @@ def generate_word_cloud_cached(free_descriptions, word_limit, colormap):
     d = path.dirname(__file__) if "__file__" in locals() else os.getcwd()
     mask = np.array(Image.open(path.join(d, 'mask.png')))
 
-    font_file = select_font('English')
+    #font_file = select_font('English')
     wordcloud = WordCloud(width=800, height=400, max_words=word_limit,
-                          font_path=font_file,
+                          #font_path=font_file,
                           mask=mask, 
                           background_color='white', 
                           colormap=colormap,
@@ -246,18 +247,18 @@ with st.sidebar:
    st.subheader("Auswahl von Molekül und Filtern")
    st.write("Hier kann das Molekül sowie die untersuchten Testgruppen ausgewählt werden.")
    ##############################
-   col1, col2, col3 = st.columns([1, 1, 1])            
+   col1, col2 = st.columns([1, 1])            
    
    with col1:
      selected_molcode = st.sidebar.selectbox('Ausgewähltes Molekül', molcodes, index=2)
    
-   with col2:
-     if selected_molcode:
-         participant_group = st.sidebar.multiselect('Ausgewählte Testgruppen', sampling_groups, default=[sampling_groups[0]])
-     if participant_group:
-         crown_data = crown_data[crown_data['sampling_group'].isin(participant_group)]
+   #with col2:
+   #  if selected_molcode:
+   #      participant_group = st.sidebar.multiselect('Ausgewählte Testgruppen', sampling_groups, default=[sampling_groups[0]])
+     #if participant_group:
+     #    crown_data = crown_data[crown_data['sampling_group'].isin(participant_group)]
    
-   with col3:
+   with col2:
      # Get the list of German labels for selection
      german_dimensions = list(dimension_labels.values())
    
