@@ -179,7 +179,7 @@ def plot_distributions(mol_data, selected_dimensions, title_prefix=""):
     sns.set_palette("bright")
     sns.set_style("dark")
 
-    colors = ["mistyrose", "salmon", "tomato", "lightcoral", 
+    colors = ["indianred", "salmon", "tomato", "lightcoral", 
               "darksalmon", "orchid", "crimson", "pink"]
     
     for i, dimension in enumerate(selected_dimensions):
