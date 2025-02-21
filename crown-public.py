@@ -114,13 +114,6 @@ def get_top_descriptions(crown_data, selected_molcode, top_n=25):
     top_descriptions = description_counts.most_common(top_n)
     return top_descriptions
 
-# Function to filter dataset based on selected descriptions
-#def filter_by_description(crown_data, selected_molcode, selected_descriptions):
-#    filtered_data = crown_data[crown_data['molcode'].isin([selected_molcode])]
-#    filtered_data['parsed_descriptions'] = filtered_data['free_description'].apply(parse_free_descriptions)
-#    filtered_data = filtered_data[filtered_data['parsed_descriptions'].apply(lambda x: any(desc in x for desc in selected_descriptions))]
-#    return filtered_data
-
 # Function to safely convert free descriptions to a list
 def parse_free_descriptions(description):
     if isinstance(description, str):
