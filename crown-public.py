@@ -27,7 +27,7 @@ ZENODO_ID = "14727277"
 GITHUB_RAW_URL = "https://raw.githubusercontent.com/albierling/crown/main/" 
 
 # Load the datasets using the new caching method
-@st.cache_data
+@st.cache_data(ttl=3600)
 def load_data():
    # Ensure odors_extended.xlsx is available (from GitHub)
    if not os.path.isfile(ODORS_EXTENDED_FILE):
@@ -115,7 +115,7 @@ crown_data = original_data.copy()
 crown_data = crown_data[crown_data["sampling_group"] != 'pat'] # remove patients from dataset here
 
 # Function to compute molecular properties
-@st.cache_data
+@st.cache_data(ttl=3600)
 def calculate_properties_cached(smiles):
     molecule = Chem.MolFromSmiles(smiles)
     molecular_weight = Descriptors.ExactMolWt(molecule)
@@ -144,7 +144,7 @@ def parse_free_descriptions(description):
         return []
 
 # Function to generate word cloud from free descriptions
-@st.cache_data
+@st.cache_data(ttl=3600)
 def generate_word_cloud_cached(free_descriptions, word_limit, colormap):
     words = [word for sublist in free_descriptions for word in sublist]
     words = sum(free_descriptions, [])
