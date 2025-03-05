@@ -252,7 +252,9 @@ with st.expander("**Hintergrund zur Studie**"):
 # Sidebar for molecule selection and description buttons
 with st.sidebar:
    st.image('crown-logo.png', width=300)
-
+   st.write("Die hier gezeigten Ergebnisse basieren auf der Originalpublikation von Bierling et al. (2025).") 
+   st.page_link("https://www.nature.com/articles/s41597-025-04644-2", label="Link zur Originalpublikation")
+   
    molcodes = crown_data['molcode'].unique()
    sampling_groups = crown_data['sampling_group'].unique()
     
