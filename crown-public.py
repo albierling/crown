@@ -260,7 +260,7 @@ with st.sidebar:
     
    #############################
    st.subheader("Auswahl von Molekül und Filtern")
-   st.write("Hier kann das Molekül sowie die untersuchten Testgruppen ausgewählt werden.")
+   #st.write("Hier kann das Molekül sowie die untersuchten Testgruppen ausgewählt werden.")
    ##############################
    col1, col2 = st.columns([1, 1])            
    
